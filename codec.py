@@ -14,6 +14,9 @@ def encode(codepoint):
         byte_middle = (0b10 << 6) | (0b0000111111000000 & codepoint) >> 6
         byte_right = (0b10 << 6) | (0b0000000000111111 & codepoint)
         print([byte_left, byte_middle, byte_right])
+        print(bin(byte_left))
+        print(bin(byte_middle))
+        print(bin(byte_right))
         return bytes([byte_left, byte_middle, byte_right])
 
     elif 65536 <= codepoint <= 1114111:
@@ -31,7 +34,7 @@ def decode(bytes_object):
     elif len(bytes_object) == 2:
         return (0b00011111 & bytes_object[0]) << 6 | (0b00111111 & bytes_object[1])
     elif len(bytes_object) == 3:
-        return (0b00001111 & bytes_object[0] << 12) | (0b00111111 & bytes_object[1]) << 6 | (0b00111111 & bytes_object[2])
+        return (0b00001111 & bytes_object[0]) << 12 | (0b00111111 & bytes_object[1]) << 6 | (0b00111111 & bytes_object[2])
     elif len(bytes_object) == 4:
         return (0b00000111 & bytes_object[0] << 18) | (0b00111111 & bytes_object[1]) << 12 | (0b00111111 & bytes_object[2]) << 6 | (0b00111111 & bytes_object[3])
 
