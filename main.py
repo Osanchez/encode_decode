@@ -1,5 +1,3 @@
-
-
 def encode(codepoint):
     if codepoint < 128:
         print([codepoint])
@@ -25,22 +23,35 @@ def encode(codepoint):
         byte_outer_right = (0b10 << 6) | (0b000000000000000111111 & codepoint)
         print([byte_outer_left, byte_inner_left, byte_inner_right, byte_outer_right])
         return bytes([byte_outer_left, byte_inner_left, byte_inner_right, byte_outer_right])
-
+    else:
+        print("outside of boundary...")
 
 
 def decode(bytes_object):
     if len(bytes_object) == 1:
         return bytes_object[0]
+    elif len(bytes_object) == 2:
+        return [bytes_object[0], bytes_object[1]]
+    elif len(bytes_object) == 3:
+        return [bytes_object[0], bytes_object[1], bytes_object[2]]
+    elif len(bytes_object) == 4:
+        return [bytes_object[0], bytes_object[1], bytes_object[2], bytes_object[3]]
+    else:
+        print("number of bytes out of boundary...")
 
 
 def main():
     print(encode(122))
+    print(decode(b'z'))
     print()
     print(encode(163))
+    print(decode(b'\xc2\xa3'))
     print()
     print(encode(2048))
+    print(decode(b'\xe0\xa0\x80'))
     print()
     print(encode(65537))
+    print(decode(b'\xf0\x90\x80\x81'))
 
 
 if __name__ == "__main__":
