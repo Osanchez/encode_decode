@@ -31,11 +31,11 @@ def decode(bytes_object):
     if len(bytes_object) == 1:
         return bytes_object[0]
     elif len(bytes_object) == 2:
-        return [bytes_object[0], bytes_object[1]]
+        return (0b00011111 & bytes_object[0]) << 6 | (0b00111111 & bytes_object[1])
     elif len(bytes_object) == 3:
-        return [bytes_object[0], bytes_object[1], bytes_object[2]]
+        return (0b00001111 & bytes_object[0] << 12) | (0b00111111 & bytes_object[1]) << 6 | (0b00111111 & bytes_object[2])
     elif len(bytes_object) == 4:
-        return [bytes_object[0], bytes_object[1], bytes_object[2], bytes_object[3]]
+        return (0b00000111 & bytes_object[0] << 18) | (0b00111111 & bytes_object[1]) << 12 | (0b00111111 & bytes_object[2]) << 6 | (0b00111111 & bytes_object[3])
     else:
         print("number of bytes out of boundary...")
 
@@ -44,11 +44,11 @@ def main():
     print(encode(122))
     print(decode(b'z'))
     print()
-    print(encode(163))
-    print(decode(b'\xc2\xa3'))
+    print(encode(168))
+    print(decode(b'\xc2\xa8'))
     print()
-    print(encode(2048))
-    print(decode(b'\xe0\xa0\x80'))
+    print(encode(2055))
+    print(decode(b'\xe0\xa0\x87'))
     print()
     print(encode(65537))
     print(decode(b'\xf0\x90\x80\x81'))
