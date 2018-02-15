@@ -1,12 +1,30 @@
 import argparse
 
+import binascii
+
 
 def print_strings(file_obj, encoding, min_len):
     # Right now all this function does is print its arguments.
     # You'll need to replace that code with code that actually finds and prints the strings!
-    print(file_obj.name)
-    print(encoding)
-    print(min_len)
+
+    binary_list = []
+
+    if encoding == "s":
+        mode = "UTF-8"
+    elif encoding == "l":
+        mode = "UTF-16-le"
+    elif encoding == "b":
+        mode = "UTF-16-be"
+
+    while 1:
+        read_byte = file_obj.read(1)
+        binary_list.append(read_byte)
+        if not read_byte:
+            break
+
+    string = ""
+    for byte in binary_list:
+        print(binascii.hexlify(byte))
 
 
 def main():
@@ -22,6 +40,7 @@ def main():
 
     with open(args.filename, 'rb') as f:
         print_strings(f, args.e, args.n)
+
 
 if __name__ == '__main__':
     main()
