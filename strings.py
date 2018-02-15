@@ -1,4 +1,5 @@
 import argparse
+import re
 
 import binascii
 
@@ -16,15 +17,29 @@ def print_strings(file_obj, encoding, min_len):
     elif encoding == "b":
         mode = "UTF-16-be"
 
-    while 1:
-        read_byte = file_obj.read(1)
-        binary_list.append(read_byte)
-        if not read_byte:
-            break
+    for block in iter(lambda: file_obj.read(16), b''):
+        raw_byte = binascii.hexlify(block)
+        byte_array = re.sub('(..)', r'\1 ', raw_byte.decode(mode)).split()
+        binary_list.append(byte_array)
 
     string = ""
-    for byte in binary_list:
-        print(binascii.hexlify(byte))
+
+    # utf-8 length 2
+    for bit_list in binary_list:
+        for bit in bit_list:
+            if 32 <= int(bit, 16) <= 126:
+                string += chr(int(bit, 16))
+            else:
+                if len(string) >= min_len:
+                    print(string)
+                    string = ""
+                else:
+                    string = ""
+        if len(string) >= min_len:
+            print(string)
+            string = ""
+        else:
+            string = ""
 
 
 def main():
